@@ -18,6 +18,14 @@ class MailSend:
     def __init__(self, login: str = None, password: str = None, from_send_mail: str = None, settingSMPTP: str = None,
                  nameFileConfig: str = None) -> None:
 
+        """
+        :param login:
+        :param password:
+        :param from_send_mail:
+        :param settingSMPTP:
+        :param nameFileConfig:
+        """
+
         if nameFileConfig:
             DataConfig = file.TxtFile(nameFileConfig).readFileToResDict("login_mail", "password_mail",
                                                                         "mail_send_data", "smtp")
@@ -31,6 +39,18 @@ class MailSend:
             self.Password: str = password
             self.FromSendMail: str = from_send_mail
             self.SettingSMPTP: str = settingSMPTP
+
+    def IfConnected(self):
+        try:
+            self.smtpObj = smtplib.SMTP(self.SettingSMPTP)
+            self.smtpObj.starttls()
+            self.smtpObj.login(self.Login, self.Password)
+            return True
+        except smtplib.SMTPAuthenticationError:
+            return False
+
+
+
 
     def __connection(self):
         self.smtpObj = smtplib.SMTP(self.SettingSMPTP)
@@ -170,7 +190,7 @@ class Playisgame:
             Parser.GlobalStatusRequest = True
 
 
-def main():
+def mainLogic():
     print("-\tServer Run\t-")
     LiveProgram: bool = True
     SendLogical = Parser()
@@ -180,14 +200,13 @@ def main():
         pe = Pepper(1, 3)
         pl = Playisgame()
 
-        # Если данные гдето обновились то отправлять уведомление
+        # Если данные где-то обновились то отправлять уведомление на мою почту
         if Parser.GlobalStatusRequest:
             SendLogical.SendDataClient()
 
         else:
-            #time.sleep(1)
             time.sleep(600)
 
 
 if __name__ == '__main__':
-    main()
+    mainLogic()

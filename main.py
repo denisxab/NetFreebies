@@ -1,4 +1,6 @@
-from logic import main
+from consol import mainConsole
+
+
 
 if __name__ == '__main__':
-    main()
+    mainConsole()
