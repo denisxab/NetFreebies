@@ -79,7 +79,7 @@ class Pepper:
         for page in range(StartPage, EndPage):
             urlPage = f"https://www.pepper.ru/?page={page}/"
             req = requests.get(urlPage, headers=self.headersAntiBoot).text
-            soup = BeautifulSoup(req, "lxml")
+            soup = BeautifulSoup(req, 'html.parser')
 
             if not SetReFilter:
                 HeadStocks = soup.find_all('a', class_='cept-tt thread-link linkPlain thread-title--list')
@@ -116,7 +116,7 @@ class Playisgame:
         ListStock: Union[List, List[List]] = []
         urlPage = f"https://playisgame.com/halyava/"
         req = requests.get(urlPage, headers=self.headersAntiBoot).text
-        soup = BeautifulSoup(req, "lxml")
+        soup = BeautifulSoup(req,  'html.parser')
         HeadStocks = soup.find_all("div", class_="pp-post-wrap pp-grid-item-wrap")
         list(ListStock.append([itemStock.find('h2', class_='pp-post-title').find_next().text,
                                itemStock.find('h2', class_='pp-post-title').find_next().get("href")]) for itemStock in
