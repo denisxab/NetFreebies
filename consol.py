@@ -15,7 +15,7 @@ class Console:
         self.tmpFile = file.TxtFile("config.txt")
 
         try:
-            if not mail_menager.MailMenger(nameFileConfig="config.txt").IfConnected():
+            if not mail_menager.SMTP_Manager(nameFileConfig="config.txt").IfConnected():
                 print("[ERROR]\tIncorrect login or password!!!")
                 print("[INFO]\tCreate new config.txt\n")
                 self.createConfigFile()
@@ -34,7 +34,7 @@ class Console:
         smtp = input("Smtp > ")
         smtp = input("Imap > ")
         self.tmpFile.writeFile(f"{login}\n{password}\n{send}\n{smtp}")
-        if not mail_menager.MailMenger(nameFileConfig="config.txt").IfConnected():
+        if not mail_menager.SMTP_Manager(nameFileConfig="config.txt").IfConnected():
             print("[ERROR]\tIncorrect login or password twice !!!")
             sys.exit(0)
 

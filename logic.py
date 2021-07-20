@@ -24,7 +24,7 @@ class Parser:
 
     def __init__(self) -> None:
         self.cropUrl = pyshorteners.Shortener()  # Экземпляр класса по сокращению ссылок
-        self.Mail = mail_menager.MailMenger(nameFileConfig="config.txt")
+        self.Mail = mail_menager.SMTP_Manager(nameFileConfig="config.txt")
 
     def SendDataClient(self) -> None:
         self.Mail.SendMessage(titleMail="Отчет о Халяве в интрнете", HtmlSend=self._createData())
@@ -131,20 +131,18 @@ class Playisgame:
 
 
 def mainLogic():
-
-
-    Mail = mail_menager.MailMenger(nameFileConfig="config.txt")
+    Mail = mail_menager.SMTP_Manager(nameFileConfig="config.txt")
     Mail.SendMessage(titleMail="Отчет о Халяве в интрнете", HtmlSend="<h1>Server Run</h1>")
     print("-\tServer Run\t-")
     LiveProgram: bool = True
-    HorseSend = mail_menager.HoursNotification([11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
+    HorseSend = mail_menager.HoursWaiting([11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
     SendLogical = Parser()
 
     while LiveProgram:
 
         # Парсеры
-        pe = Pepper(1, 3)
-        pl = Playisgame()
+        Pepper(1, 3)
+        Playisgame()
 
         # Если данные где-то обновились то отправлять уведомление на мою почту
         if Parser.GlobalStatusRequest:
