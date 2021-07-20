@@ -11,7 +11,7 @@ NameProj = "NetFreebies"
 VersionProj = "0.0.1"
 
 from helpful import file
-from logic import mainLogic, MailSend
+from logic import mainLogic, mail_menager
 
 
 class Console:
@@ -20,7 +20,7 @@ class Console:
     def __init__(self) -> None:
         print(Console.BeakGround)
         self.tmpFile = file.TxtFile("config.txt")
-        if not MailSend(nameFileConfig="config.txt").IfConnected():
+        if not mail_menager.MailSend(nameFileConfig="config.txt").IfConnected():
             print("[ERROR]\tIncorrect login or password!!!")
             print("[INFO]\tCreate new config.txt\n")
             self.createConfigFile()
@@ -32,7 +32,7 @@ class Console:
         send = input("Send Mail > ")
         smtp = input("Smtp Mail > ")
         self.tmpFile.writeFile(f"{login}\n{password}\n{send}\n{smtp}")
-        if not MailSend(nameFileConfig="config.txt").IfConnected():
+        if not mail_menager.MailSend(nameFileConfig="config.txt").IfConnected():
             print("[ERROR]\tIncorrect login or password twice !!!")
             sys.exit(0)
 

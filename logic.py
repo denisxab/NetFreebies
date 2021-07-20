@@ -1,82 +1,21 @@
 import datetime
-import email
+import logging
 import re
-import smtplib
-import time
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 from typing import List, Union, Dict
 
 import pyshorteners
 import requests
 from bs4 import BeautifulSoup
 
-from helpful import file
+from helpful import mail_menager, file
 
-
-class MailSend:
-    def __init__(self, login: str = None, password: str = None, from_send_mail: str = None, settingSMPTP: str = None,
-                 nameFileConfig: str = None) -> None:
-
-        """
-        :param login:
-        :param password:
-        :param from_send_mail:
-        :param settingSMPTP:
-        :param nameFileConfig:
-        """
-
-        if nameFileConfig:
-            DataConfig = file.TxtFile(nameFileConfig).readFileToResDict("login_mail", "password_mail",
-                                                                        "mail_send_data", "smtp")
-            self.Login: str = DataConfig["login_mail"]
-            self.Password: str = DataConfig["password_mail"]
-            self.FromSendMail: str = DataConfig["mail_send_data"]
-            self.SettingSMPTP: str = DataConfig["smtp"]
-
-        else:
-            self.Login: str = login
-            self.Password: str = password
-            self.FromSendMail: str = from_send_mail
-            self.SettingSMPTP: str = settingSMPTP
-
-    def IfConnected(self):
-        try:
-            self.smtpObj = smtplib.SMTP(self.SettingSMPTP)
-            self.smtpObj.starttls()
-            self.smtpObj.login(self.Login, self.Password)
-            return True
-        except smtplib.SMTPAuthenticationError:
-            return False
-
-
-
-
-    def __connection(self):
-        self.smtpObj = smtplib.SMTP(self.SettingSMPTP)
-        self.smtpObj.starttls()
-        self.smtpObj.login(self.Login, self.Password)
-
-    def SendMessage(self, titleMail: str, textSend: str):
-        """
-        :param titleMail: Тема письма
-        :param textSend: HTML текст
-        """
-        self.__connection()
-
-        message = MIMEMultipart("alternative")
-        message["From"] = self.Login
-        message["To"] = self.FromSendMail
-        message["Subject"] = titleMail
-        message.attach(MIMEText(textSend, "html"))  # Переводим Html текст в понтяный формат для отображения
-        messageSend = message.as_string().encode('utf-8')
-        self.smtpObj.sendmail(self.Login, self.FromSendMail,
-                              msg=messageSend)
-
-        self.__disconnection()
-
-    def __disconnection(self):
-        self.smtpObj.quit()
+logging.basicConfig(handlers=[logging.FileHandler(filename="test/logic.log",
+                                                  encoding='utf-8', mode='w')],
+                    format="%(asctime)s %(name)s:%(funcName)s:%(levelname)s:%(message)s->%(thread)d",
+                    datefmt="%F %T",
+                    level=logging.INFO)
+logging.getLogger("urllib3").setLevel(logging.INFO)
+log = logging.getLogger("MailSend")
 
 
 class Parser:
@@ -85,16 +24,17 @@ class Parser:
 
     def __init__(self) -> None:
         self.cropUrl = pyshorteners.Shortener()  # Экземпляр класса по сокращению ссылок
-        self.Mail = MailSend(nameFileConfig="config.txt")
+        self.Mail = mail_menager.MailSend(nameFileConfig="config.txt")
 
     def SendDataClient(self) -> None:
-        self.Mail.SendMessage(titleMail="Отчет о Халяве в интрнете", textSend=self._createData())
-        print(
-            f"Send to:{self.Mail.FromSendMail}\t{datetime.datetime.now().strftime('%d-%m-%Y %H:%M')}")
+        self.Mail.SendMessage(titleMail="Отчет о Халяве в интрнете", HtmlSend=self._createData())
 
+        text = f"Send to:{self.Mail.FromSendMail}\t{datetime.datetime.now().strftime('%d-%m-%Y %H:%M')}"
+        log.info(text)
+        print(text)
         Parser._clear()
 
-    def _createData(self) -> email.message:
+    def _createData(self) -> str:
         tmpData = Parser.DataSendList
         res: str = "<html><body>"  # Заголовок
         for keys in tmpData.keys():
@@ -193,7 +133,9 @@ class Playisgame:
 def mainLogic():
     print("-\tServer Run\t-")
     LiveProgram: bool = True
+    HorseSend = mail_menager.HoursNotification([11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
     SendLogical = Parser()
+
     while LiveProgram:
 
         # Парсеры
@@ -203,9 +145,8 @@ def mainLogic():
         # Если данные где-то обновились то отправлять уведомление на мою почту
         if Parser.GlobalStatusRequest:
             SendLogical.SendDataClient()
-
         else:
-            time.sleep(600)
+            HorseSend.WaitRightHour() # Ждать указаного часа
 
 
 if __name__ == '__main__':
