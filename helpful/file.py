@@ -124,6 +124,22 @@ class CsvFile(File):
                 return res[1::]
             return res
 
+    def readFileAndFindDifferences(self, new_data_find: List[List], funIter) -> bool:  # -
+        """
+        for new_data, data_file in zip(self.ListStock, DataFile):
+            if new_data != data_file:
+                funIter(new_data)
+
+        :param new_data_find: Новые данные
+        :param funIter: Функция которая будет выполняться на каждой итерации
+        """
+        DataFile = self.readFile(miss_get_head=True)
+        if DataFile != new_data_find:
+            list(funIter(new_data) for new_data in new_data_find if new_data not in DataFile)
+            return True
+        else:
+            return False
+
     def readFileRevers(self, *,
                        limit: int = None,
                        encoding: str = "utf-8",
@@ -230,6 +246,17 @@ class TxtFile(File):
             raise ValueError("Файл должен иметь разшерение .txt")
 
         File.__init__(self, nameFile)
+
+    def readFileToResDict(self, *args: str, separator: str = '\n') -> Dict[str, str]:
+        """
+        :param separator:
+        :param args: Имя ключей словаря
+        """
+        resDict: Dict[str, str] = {}
+        with open(self.nameFile, "r") as f:
+            for index, line in enumerate(f):
+                resDict[args[index]] = line.replace(separator, "")
+        return resDict
 
     def readFile(self, limit: int = 0) -> str:  # +
         with open(self.nameFile, "r") as f:
