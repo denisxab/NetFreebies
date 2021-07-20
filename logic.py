@@ -185,8 +185,8 @@ def main():
             SendLogical.SendDataClient()
 
         else:
-            time.sleep(1)
-            # time.sleep(600)
+            #time.sleep(1)
+            time.sleep(600)
 
 
 if __name__ == '__main__':
