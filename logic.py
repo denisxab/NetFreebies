@@ -116,7 +116,7 @@ class Playisgame:
         ListStock: Union[List, List[List]] = []
         urlPage = f"https://playisgame.com/halyava/"
         req = requests.get(urlPage, headers=self.headersAntiBoot).text
-        soup = BeautifulSoup(req,  'html.parser')
+        soup = BeautifulSoup(req, 'html.parser')
         HeadStocks = soup.find_all("div", class_="pp-post-wrap pp-grid-item-wrap")
         list(ListStock.append([itemStock.find('h2', class_='pp-post-title').find_next().text,
                                itemStock.find('h2', class_='pp-post-title').find_next().get("href")]) for itemStock in
@@ -131,6 +131,10 @@ class Playisgame:
 
 
 def mainLogic():
+
+
+    Mail = mail_menager.MailSend(nameFileConfig="config.txt")
+    Mail.SendMessage(titleMail="Отчет о Халяве в интрнете", HtmlSend="<h1>Server Run</h1>")
     print("-\tServer Run\t-")
     LiveProgram: bool = True
     HorseSend = mail_menager.HoursNotification([11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
@@ -146,7 +150,7 @@ def mainLogic():
         if Parser.GlobalStatusRequest:
             SendLogical.SendDataClient()
         else:
-            HorseSend.WaitRightHour() # Ждать указаного часа
+            HorseSend.WaitRightHour()  # Ждать указаного часа
 
 
 if __name__ == '__main__':

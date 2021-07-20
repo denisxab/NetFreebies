@@ -20,10 +20,18 @@ class Console:
     def __init__(self) -> None:
         print(Console.BeakGround)
         self.tmpFile = file.TxtFile("config.txt")
-        if not mail_menager.MailSend(nameFileConfig="config.txt").IfConnected():
+
+        try:
+            if not mail_menager.MailSend(nameFileConfig="config.txt").IfConnected():
+                print("[ERROR]\tIncorrect login or password!!!")
+                print("[INFO]\tCreate new config.txt\n")
+                self.createConfigFile()
+
+        except KeyError:
             print("[ERROR]\tIncorrect login or password!!!")
             print("[INFO]\tCreate new config.txt\n")
             self.createConfigFile()
+
         mainLogic()
 
     def createConfigFile(self):
