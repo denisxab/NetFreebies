@@ -1,4 +1,5 @@
 ﻿/venv
 /.idea
 /data
+/test/logic.log
 config.txt
