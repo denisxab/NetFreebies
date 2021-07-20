@@ -1,4 +1,4 @@
 ﻿/venv
 /.idea
-/data/*
+/data
 config.txt
