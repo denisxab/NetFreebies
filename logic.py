@@ -24,7 +24,7 @@ class Parser:
 
     def __init__(self) -> None:
         self.cropUrl = pyshorteners.Shortener()  # Экземпляр класса по сокращению ссылок
-        self.Mail = mail_menager.MailSend(nameFileConfig="config.txt")
+        self.Mail = mail_menager.MailMenger(nameFileConfig="config.txt")
 
     def SendDataClient(self) -> None:
         self.Mail.SendMessage(titleMail="Отчет о Халяве в интрнете", HtmlSend=self._createData())
@@ -133,7 +133,7 @@ class Playisgame:
 def mainLogic():
 
 
-    Mail = mail_menager.MailSend(nameFileConfig="config.txt")
+    Mail = mail_menager.MailMenger(nameFileConfig="config.txt")
     Mail.SendMessage(titleMail="Отчет о Халяве в интрнете", HtmlSend="<h1>Server Run</h1>")
     print("-\tServer Run\t-")
     LiveProgram: bool = True

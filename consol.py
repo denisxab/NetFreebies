@@ -1,11 +1,4 @@
-﻿"""
-
-kustovd662@gmail.com
-kustov20001
-pro-progerkustov@yandex.ru
-smtp.gmail.com:587
-"""
-import sys
+﻿import sys
 
 NameProj = "NetFreebies"
 VersionProj = "0.0.1"
@@ -22,7 +15,7 @@ class Console:
         self.tmpFile = file.TxtFile("config.txt")
 
         try:
-            if not mail_menager.MailSend(nameFileConfig="config.txt").IfConnected():
+            if not mail_menager.MailMenger(nameFileConfig="config.txt").IfConnected():
                 print("[ERROR]\tIncorrect login or password!!!")
                 print("[INFO]\tCreate new config.txt\n")
                 self.createConfigFile()
@@ -38,9 +31,10 @@ class Console:
         login = input("Login Mail > ")
         password = input("Password Mail > ")
         send = input("Send Mail > ")
-        smtp = input("Smtp Mail > ")
+        smtp = input("Smtp > ")
+        smtp = input("Imap > ")
         self.tmpFile.writeFile(f"{login}\n{password}\n{send}\n{smtp}")
-        if not mail_menager.MailSend(nameFileConfig="config.txt").IfConnected():
+        if not mail_menager.MailMenger(nameFileConfig="config.txt").IfConnected():
             print("[ERROR]\tIncorrect login or password twice !!!")
             sys.exit(0)
 
